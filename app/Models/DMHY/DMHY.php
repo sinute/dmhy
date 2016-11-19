@@ -12,7 +12,7 @@ class DMHY
     {
         $this->options = array_merge([
             'timeout' => 5,
-            'url'     => 'http://share.nichijou.me/topics/list/sort_id/2/page/{page}',
+            'url'     => 'https://share.dmhy.org/topics/list/sort_id/2/page/{page}',
         ], array_filter($options));
     }
 
