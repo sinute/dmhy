@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/lumen-framework": "5.2.*",
         "vlucas/phpdotenv": "~2.2",
-        "paquettg/php-html-parser": "~1.7"
+        "paquettg/php-html-parser": "~1.7",
+        "xiaosier/libweibo": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

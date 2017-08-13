@@ -25,6 +25,7 @@ class Publish extends Migration
             $table->unsignedInteger('created_at');
             $table->unsignedInteger('updated_at');
             $table->unsignedInteger('deleted_at');
+            $table->index('publish_time');
             $table->unique('link');
         });
     }

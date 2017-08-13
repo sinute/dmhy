@@ -61,12 +61,20 @@ class Fetch extends Command
         }
     }
 
+    /**
+     * 抓取记录
+     *
+     * @author Sinute
+     * @date   2016-07-02
+     * @param  integer     $current 当前页
+     * @return integer              抓取到的总数
+     */
     protected function fetch($current)
     {
         $page    = $this->site->fetch($current);
         $content = (string) $page;
         $count   = $page->items()->count();
-        foreach ($page->items() as $item) {
+        foreach ($page->items()->reverse() as $item) {
             DB::table('publish')->updateOrInsert(['link' => $item->link()], $this->processPublish($item));
             if ($item->categoryID()) {
                 DB::table('category')->updateOrInsert(['id' => $item->categoryID()], $this->processCategory($item));
@@ -92,6 +100,51 @@ class Fetch extends Command
         return $count;
     }
 
+    /**
+     * Write a string as error output.
+     *
+     * @param  string  $string
+     * @param  null|int|string  $verbosity
+     * @return void
+     */
+    public function error($string, $verbosity = null)
+    {
+        parent::error(static::formatLog($string), $verbosity);
+    }
+
+    /**
+     * Write a string as information output.
+     *
+     * @param  string  $string
+     * @param  null|int|string  $verbosity
+     * @return void
+     */
+    public function info($string, $verbosity = null)
+    {
+        parent::info(static::formatLog($string), $verbosity);
+    }
+
+    /**
+     * 格式化日志记录
+     *
+     * @author Sinute
+     * @date   2016-07-02
+     * @param  string     $string
+     * @return string
+     */
+    protected static function formatLog($string)
+    {
+        return sprintf('%s %s', date('Y-m-d H:i:s'), $string);
+    }
+
+    /**
+     * 处理发布记录
+     *
+     * @author Sinute
+     * @date   2016-07-02
+     * @param  ItemContract $item 记录
+     * @return array              发布记录
+     */
     protected function processPublish(ItemContract $item)
     {
         $time = time();
@@ -110,6 +163,14 @@ class Fetch extends Command
         ];
     }
 
+    /**
+     * 处理分类
+     *
+     * @author Sinute
+     * @date   2016-07-02
+     * @param  ItemContract $item 记录
+     * @return array              分类
+     */
     protected function processCategory(ItemContract $item)
     {
         $time = time();
@@ -122,6 +183,14 @@ class Fetch extends Command
         ];
     }
 
+    /**
+     * 处理发布者
+     *
+     * @author Sinute
+     * @date   2016-07-02
+     * @param  ItemContract $item 记录
+     * @return array              发布者
+     */
     protected function processPublisher(ItemContract $item)
     {
         $time = time();
@@ -134,6 +203,14 @@ class Fetch extends Command
         ];
     }
 
+    /**
+     * 处理字幕组
+     *
+     * @author Sinute
+     * @date   2016-07-02
+     * @param  ItemContract $item 记录
+     * @return array              字幕组
+     */
     protected function processFansub(ItemContract $item)
     {
         $time = time();

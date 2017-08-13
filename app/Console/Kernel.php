@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\DMHY\Fetch',
+        'App\Console\Commands\Weibo\Publish',
     ];
 
     /**
