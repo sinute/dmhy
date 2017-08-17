@@ -56,14 +56,16 @@ class Publish extends Command
                 $link         = "https://share.dmhy.org{$content->link}";
                 $status       = "{$title} {$downloadLink} {$link}";
                 $result       = $client->share($status);
-                if ($result && isset($result['id'])) {
+                if (
+                    ($result && isset($result['id'])) ||
+                    (isset($result['error_code']) && $result['error_code'] == 20017)
+                ) {
                     $this->info("Publish [{$content->title}]({$content->id}) success!");
                     $lastID = $content->id;
                 } else {
                     $this->error("Publish [{$content->title}]({$content->id}) fail!");
                     if (isset($result['error'])) {
-                        $this->error("{$result['error']}");
-
+                        $this->error("{$result['error']}({$result['error_code']})");
                     }
                     break;
                 }
