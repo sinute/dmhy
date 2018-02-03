@@ -85,6 +85,14 @@ class Fetch extends Command
             if ($item->fansubID()) {
                 DB::table('fansub')->updateOrInsert(['id' => $item->fansubID()], $this->processFansub($item));
             }
+            $publishDateTime = date('Y-m-d H:i:s', $item->publishTime());
+            $this->info("==============================");
+            $this->info("发布时间: {$publishDateTime}");
+            $this->info("字幕组: {$item->fansubName()}");
+            $this->info("分类: {$item->categoryName()}");
+            $this->info("标题: {$item->title()}");
+            $this->info("大小: {$item->fileSize()}");
+            $this->info("发布人: {$item->publisherName()}");
         }
 
         if ($this->option('interval')) {
@@ -98,43 +106,6 @@ class Fetch extends Command
 
         $this->info("[PAGE {$current}] OK ({$count})");
         return $count;
-    }
-
-    /**
-     * Write a string as error output.
-     *
-     * @param  string  $string
-     * @param  null|int|string  $verbosity
-     * @return void
-     */
-    public function error($string, $verbosity = null)
-    {
-        parent::error(static::formatLog($string), $verbosity);
-    }
-
-    /**
-     * Write a string as information output.
-     *
-     * @param  string  $string
-     * @param  null|int|string  $verbosity
-     * @return void
-     */
-    public function info($string, $verbosity = null)
-    {
-        parent::info(static::formatLog($string), $verbosity);
-    }
-
-    /**
-     * 格式化日志记录
-     *
-     * @author Sinute
-     * @date   2016-07-02
-     * @param  string     $string
-     * @return string
-     */
-    protected static function formatLog($string)
-    {
-        return sprintf('%s %s', date('Y-m-d H:i:s'), $string);
     }
 
     /**
@@ -239,5 +210,11 @@ class Fetch extends Command
         return [
             ['page', InputArgument::OPTIONAL, 'Which page to fetch.', 1],
         ];
+    }
+
+    public function line($string, $style = null, $verbosity = null)
+    {
+        $dateTime = date('Y-m-d H:i:s');
+        parent::line("[{$dateTime}] {$string}", $style, $verbosity);
     }
 }

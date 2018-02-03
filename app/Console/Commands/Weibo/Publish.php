@@ -33,11 +33,11 @@ class Publish extends Command
 
         $weiboAccounts = DB::table('weibo')->get();
         foreach ($weiboAccounts as $weiboAccout) {
-            $this->comment("Start {$weiboAccout->fansub_id} (last from {$weiboAccout->last_id}):");
+            $this->comment("Start {$weiboAccout->name} (last from {$weiboAccout->last_id}):");
             $contents = DB::table('publish')
                 ->where('id', '>', $weiboAccout->last_id)
                 ->where('fansub_id', $weiboAccout->fansub_id)
-                ->orderBy('publish_time', 'asc')
+                ->orderBy('id', 'asc')
                 ->get();
             $count = count($contents);
             $this->comment("Find {$count} to publish.");
@@ -60,7 +60,15 @@ class Publish extends Command
                     ($result && isset($result['id'])) ||
                     (isset($result['error_code']) && $result['error_code'] == 20017)
                 ) {
+                    // 已发送
                     $this->info("Publish [{$content->title}]({$content->id}) success!");
+                    $lastID = $content->id;
+                } elseif (
+                    ($result && isset($result['id'])) ||
+                    (isset($result['error_code']) && $result['error_code'] == 20021)
+                ) {
+                    // content is illegal!
+                    $this->error("Publish [{$content->title}]({$content->id}) fail!{$result['error']}({$result['error_code']}) [SKIP]");
                     $lastID = $content->id;
                 } else {
                     $this->error("Publish [{$content->title}]({$content->id}) fail!");
@@ -76,5 +84,11 @@ class Publish extends Command
                     ->update(['last_id' => $lastID]);
             }
         }
+    }
+
+    public function line($string, $style = null, $verbosity = null)
+    {
+        $dateTime = date('Y-m-d H:i:s');
+        parent::line("[{$dateTime}] {$string}", $style, $verbosity);
     }
 }

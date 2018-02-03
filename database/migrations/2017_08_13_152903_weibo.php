@@ -18,6 +18,8 @@ class Weibo extends Migration
             $table->string('app_key', 32);
             $table->string('app_secret', 32);
             $table->string('access_token', 32);
+            $table->string('account', 256);
+            $table->string('name', 64);
             $table->unsignedInteger('last_id');
             $table->unsignedInteger('created_at');
             $table->unsignedInteger('updated_at');

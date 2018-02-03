@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('dmhy:fetch')->hourly();
+        $schedule->command('dmhy:fetch', ['url', 'https://share.dmhy.org/'])->cron('*/20 * * * *');
+        $schedule->command('weibo:push')->cron('*/15 * * * *');
     }
 }
